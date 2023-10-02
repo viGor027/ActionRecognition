@@ -2,7 +2,8 @@ import cv2
 import os
 import numpy as np
 import random
-from constants import CLASSES, ClASS_PATHS, STARTING_FRAMES, TOTAL_N_TRAINING_SAMPLES
+from constants import CLASSES, ClASS_PATHS, STARTING_FRAMES,\
+    TOTAL_N_TRAINING_SAMPLES, IMAGE_SIZE, N_FRAMES
 import tensorflow as tf
 
 
@@ -22,7 +23,7 @@ def preprocess_video_file(filepath: str, n_frames: int = 5):
     while cap.isOpened() and frame_count < n_frames:
         cap.set(cv2.CAP_PROP_POS_FRAMES, current_frame)
         ret, frame = cap.read()
-        frame = cv2.resize(frame, (128, 128))
+        frame = cv2.resize(frame, (IMAGE_SIZE, IMAGE_SIZE))
 
         if ret:
             frames.append(frame)
@@ -52,19 +53,22 @@ def get_gen(set_type: str):
             videos = os.listdir(ClASS_PATHS[cls])
             videos_for_set_type = get_set_of_videos(set_type, videos)
             for video_path in videos_for_set_type:
+                if set_type == 'train' and (cls == 0 or cls == 1) and np.random.randint(1, 101) <= 30:
+                    yield preprocess_video_file(
+                        os.path.join(ClASS_PATHS[cls], video_path), n_frames=N_FRAMES), (category,)
                 yield preprocess_video_file(
-                    os.path.join(ClASS_PATHS[cls], video_path)), (category,)
+                    os.path.join(ClASS_PATHS[cls], video_path), n_frames=N_FRAMES), (category,)
 
     return gen
 
 
 batch_size = 64
 
-x_shape = (5, 128, 128, 3)
+x_shape = (N_FRAMES, IMAGE_SIZE, IMAGE_SIZE, 3)
 y_shape = (1,)
 
 x_type = tf.float32
-y_type = tf.float32
+y_type = tf.int8
 
 train_ds = tf.data.Dataset.from_generator(get_gen('train'), output_signature=(
     tf.TensorSpec(shape=x_shape, dtype=x_type),
