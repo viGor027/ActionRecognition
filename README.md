@@ -31,3 +31,15 @@ Instead, during training I chose to yield more samples of those classes, that we
 ## Dataset link
 
 [Dataset](https://www.crcv.ucf.edu/data/UCF101.php)
+
+# How to train the model yourself
+
+First in the directory of cloned repo install all required libraries via:
+
+```pip install -r requirements.txt```
+
+Then download the dataset, and unpack it into ```data``` folder so your folder structure looks as follows:
+
+![Structure](https://i.ibb.co/M60SdHQ/Zrzut-ekranu-2023-11-07-095415.png)
+
+Now you can run ```train.py```

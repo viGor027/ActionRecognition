@@ -1,6 +1,6 @@
 import os
 
-ROOT_PATH = "../data"
+ROOT_PATH = os.path.join((os.path.dirname(os.path.dirname(__file__))), 'data')
 
 CLASSES = os.listdir(ROOT_PATH)
 

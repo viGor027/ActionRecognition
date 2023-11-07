@@ -2,7 +2,7 @@ import cv2
 import os
 import numpy as np
 import random
-from constants import CLASSES, ClASS_PATHS, STARTING_FRAMES,\
+from src.constants import CLASSES, ClASS_PATHS, STARTING_FRAMES,\
     TOTAL_N_TRAINING_SAMPLES, IMAGE_SIZE, N_FRAMES
 import tensorflow as tf
 
