@@ -1,7 +1,6 @@
 # Overview
 
-Idea of the project was to build a model capable of recognizing type of sport activity
-in the video.
+The project aimed to develop a model capable of recognizing different types of sport activities in videos.
 
 ## Tech stack
 - tensorflow, keras
@@ -12,11 +11,11 @@ in the video.
 
 ## Process
 
-Backbone of the MobileNet network was used in this project.
-At first, I was searching for optimal learning rate and number of layers and neurons at each layer,
-then after training some of the first versions of a model I looked at the confusion matrix, to correct the model's errors I decided to increase
-number of frames that is passed to a model for each sample. Given low memory capability further increasing of number of frames caused errors.
-Instead, during training I chose to yield more samples of those classes, that were misclassified. 
+The project utilized the MobileNet network as its backbone. The process involved:
+
+1. Exploring optimal learning rates and determining the number of layers and neurons at each layer.
+2. Initial model versions were trained, and the confusion matrix was analyzed. To address model errors, I chose to increase the number of frames passed to the model for each sample.
+3. Due to memory limitations in a home environment, further increasing the number of frames caused errors. Instead, I implemented a strategy during training to yield more samples of misclassified classes, optimizing learning from these instances.
 
 # Results
 
