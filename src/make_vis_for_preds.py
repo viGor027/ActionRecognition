@@ -1,3 +1,17 @@
+"""
+Script for loading a pre-trained model and generating confusion matrices for test set predictions.
+
+Requirements:
+    - TensorFlow (tf)
+    - Numpy (np)
+    - scikit-learn.metrics.ConfusionMatrixDisplay
+    - matplotlib.pyplot
+
+Usage:
+    - Ensure that the 'model.h5' file is present in the current working directory.
+    - Ensure that the 'get_gen' function is correctly implemented in the 'src.data' module.
+"""
+
 import tensorflow as tf
 from src.data import get_gen
 import numpy as np

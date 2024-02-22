@@ -1,3 +1,36 @@
+"""
+Data Preprocessing and Generator Configuration
+
+This script defines functions and configurations related to data preprocessing
+and generator creation for training, validation, and testing.
+
+Module Dependencies:
+    - cv2 (imported as cv2)
+    - os
+    - numpy as np
+    - random
+    - tf (imported as tensorflow) with dependencies
+        - src.constants (imported as CLASSES, ClASS_PATHS, STARTING_FRAMES,
+                            TOTAL_N_TRAINING_SAMPLES, IMAGE_SIZE, N_FRAMES)
+
+Global Constants:
+    - batch_size (int): Batch size for training, validation, and testing datasets.
+    - x_shape (tuple): Shape of input data (number of frames, height, width, channels).
+    - y_shape (tuple): Shape of output labels (number of classes).
+    - x_type (tf.dtype): Data type of input.
+    - y_type (tf.dtype): Data type of output.
+
+Global Dataset Objects:
+    - train_ds (tf.data.Dataset): Training dataset object.
+    - val_ds (tf.data.Dataset): Validation dataset object.
+    - test_ds (tf.data.Dataset): Testing dataset object.
+
+Example Usage:
+    - Utilize this script to define functions for preprocessing video data and creating data generators.
+    - Adjust batch_size, x_shape, and y_shape based on the model and task requirements.
+    - Configure dataset objects train_ds, val_ds, and test_ds for training, validation, and testing datasets.
+"""
+
 import cv2
 import os
 import numpy as np
@@ -7,7 +40,17 @@ from src.constants import CLASSES, ClASS_PATHS, STARTING_FRAMES,\
 import tensorflow as tf
 
 
-def preprocess_video_file(filepath: str, n_frames: int = 5):
+def preprocess_video_file(filepath: str, n_frames: int = 5) -> np.ndarray:
+    """
+    Preprocesses a video file by extracting frames.
+
+    Parameters:
+        filepath (str): Path to the video file.
+        n_frames (int): Number of frames to extract.
+
+    Returns:
+        np.ndarray: Processed frames as a NumPy array.
+    """
     cap = cv2.VideoCapture(filepath)
     frames = []
     frame_count = 0
@@ -37,7 +80,17 @@ def preprocess_video_file(filepath: str, n_frames: int = 5):
     return np.array(frames)
 
 
-def get_set_of_videos(set_type: str, list_of_videos: list):
+def get_set_of_videos(set_type: str, list_of_videos: list) -> list:
+    """
+    Gets a subset of videos based on the set type (train, valid, test).
+
+    Parameters:
+        set_type (str): Type of the dataset (train, valid, test).
+        list_of_videos (list): List of video filenames.
+
+    Returns:
+        list: Subset of videos.
+    """
     n_videos = len(list_of_videos)
     if set_type == 'train':
         return list_of_videos[: int(.8 * n_videos)]
@@ -47,8 +100,35 @@ def get_set_of_videos(set_type: str, list_of_videos: list):
         return list_of_videos[int(.9 * n_videos):]
 
 
-def get_gen(set_type: str):
+def get_gen(set_type: str) -> callable:
+    """
+    Creates a generator function for generating batches of preprocessed video data and labels.
+
+    Parameters:
+        set_type (str): Type of the dataset (train, valid, test).
+
+    Returns:
+        callable: Generator function.
+    """
     def gen():
+        """
+        Generator function for creating batches of preprocessed video data and labels.
+
+        Yields:
+            tuple: A tuple containing preprocessed video data and corresponding labels.
+
+        Notes:
+            - This generator function is designed to be used with TensorFlow Dataset.from_generator().
+
+        Example:
+            Usage with tf.data.Dataset.from_generator():
+
+            ```python
+            train_ds = tf.data.Dataset.from_generator(get_gen('train'), output_signature=(
+                tf.TensorSpec(shape=x_shape, dtype=x_type),
+                tf.TensorSpec(shape=y_shape, dtype=y_type),))
+            ```
+        """
         for category, cls in enumerate(CLASSES):
             videos = os.listdir(ClASS_PATHS[cls])
             videos_for_set_type = get_set_of_videos(set_type, videos)

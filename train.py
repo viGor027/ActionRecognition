@@ -2,7 +2,6 @@ from src.data import train_ds, val_ds
 from src.model.model import model
 import tensorflow as tf
 
-# tensorboard_callback = tf.keras.callbacks.TensorBoard('tensorboard/')
 es = tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True)
 
 metrics = [
